@@ -12,6 +12,32 @@ export default class Main extends Component {
     loading: false
   };
 
+  // Executado assim que o componente aparece em tela
+  componentDidMount() {
+    const data = localStorage.getItem('repositories');
+
+    if (data) {
+      this.setState({ repositories: JSON.parse(data) });
+    }
+  }
+
+  /**
+   * Executado sempre que houver alterações nas props ou estado
+   *
+   * @param {*} prevProps
+   * @param {*} prevState
+   */
+  componentDidUpdate(_, prevState) {
+    // this.props
+    // this.state
+
+    const { repositories } = this.state;
+
+    if (prevState.techs !== repositories) {
+      localStorage.setItem('repositories', JSON.stringify(repositories));
+    }
+  }
+
   handleInputChgange = e => {
     this.setState({ newRepo: e.target.value });
   };

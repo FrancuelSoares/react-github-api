@@ -15,9 +15,10 @@ export default createGlobalStyle`
   body{
     background: #7159c1;
     -webkit-font-smothing: antialiased !important;
+    line-height: 1.7;
   }
 
-  body,input, button{
+  body, input, button{
     color: #222;
     font-size: 16px;
     font-family: Arial, Helvetica, sans-serif;

@@ -11,7 +11,8 @@ export default class Main extends Component {
   state = {
     newRepo: '',
     repositories: [],
-    loading: false
+    loading: false,
+    error: null
   };
 
   // Executado assim que o componente aparece em tela
@@ -35,37 +36,52 @@ export default class Main extends Component {
 
     const { repositories } = this.state;
 
-    if (prevState.techs !== repositories) {
+    if (prevState.repositories !== repositories) {
       localStorage.setItem('repositories', JSON.stringify(repositories));
     }
   }
 
-  handleInputChgange = e => {
-    this.setState({ newRepo: e.target.value });
+  handleInputChange = e => {
+    this.setState({ newRepo: e.target.value, error: null });
   };
 
   handleSubmit = async e => {
     e.preventDefault();
 
-    this.setState({ loading: true });
+    this.setState({ loading: true, error: false });
 
-    const { newRepo, repositories } = this.state;
+    try {
+      const { newRepo, repositories } = this.state;
 
-    const response = await api.get(`/repos/${newRepo}`);
+      if (newRepo === '') throw new Error('O campo repositório é obrigatório.');
 
-    const data = {
-      name: response.data.full_name
-    };
+      const hasRepo = repositories.find(r => r.name === newRepo);
 
-    this.setState({
-      repositories: [...repositories, data],
-      newRepo: '',
-      loading: false
-    });
+      if (hasRepo) throw new Error('Repositório duplicado.');
+
+      const response = await api.get(`/repos/${newRepo}`);
+
+      const data = {
+        name: response.data.full_name
+      };
+
+      this.setState({
+        repositories: [...repositories, data],
+        newRepo: ''
+      });
+    } catch (error) {
+      this.setState({
+        error: true
+      });
+    } finally {
+      this.setState({
+        loading: false
+      });
+    }
   };
 
   render() {
-    const { newRepo, repositories, loading } = this.state;
+    const { newRepo, repositories, loading, error } = this.state;
 
     return (
       <Container>
@@ -74,15 +90,15 @@ export default class Main extends Component {
           Repositórios
         </h1>
 
-        <Form onSubmit={this.handleSubmit}>
+        <Form onSubmit={this.handleSubmit} error={error}>
           <input
             type="text"
             placeholder="Adicionar Repositório"
             value={newRepo}
-            onChange={this.handleInputChgange}
+            onChange={this.handleInputChange}
           />
 
-          <SubmitButton loading={loading}>
+          <SubmitButton loading={loading ? 1 : 0}>
             {loading ? (
               <FaSpinner color="#fff" size={14} />
             ) : (

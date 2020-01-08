@@ -10,3 +10,7 @@ Um pouco sobre React Native e uma Visão Geral novamente sobre o Curso.
 Criando projeto
 
 ESLint, Prettier & EditorConfig
+
+### 07/01/2020
+
+Configurando Reactotron

@@ -14,3 +14,10 @@ ESLint, Prettier & EditorConfig
 ### 07/01/2020
 
 Configurando Reactotron
+
+
+### 10/01/2020
+
+Revisão de conteúdos aprendidos no curso
+
+React Navigation
